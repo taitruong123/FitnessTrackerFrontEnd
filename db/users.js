@@ -12,6 +12,7 @@ async function createUser({ username, password }) {
     ON CONFLICT (username) DO NOTHING
     RETURNING *;
     `, [username, password]);
+  delete rows[0].password;
   return rows;
   } catch(err){
     console.error(err)
