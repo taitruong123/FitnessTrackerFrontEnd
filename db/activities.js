@@ -77,16 +77,18 @@ async function updateActivity({ id, ...fields }) {
   // don't try to update the id
   // do update the name and description
   // return the updated activity
+const setString = Object.keys(fields).map(
+  (key, index) => `"${ key }"=$${ index + 1 }`
+).join(', ');
 
-console.log("FIELDS LOGGED HERE",fields)
 try {
   const { rows } = await client.query(`
   
     UPDATE activities
-    SET name = '${fields.name}', description = '${fields.description}'
-    WHERE id = '${id}'
+    SET ${ setString }
+    WHERE id=${ id }
     RETURNING *;
-  `);
+  `, Object.values(fields));
   return rows[0];
 } catch(err) {
   console.error(err)
