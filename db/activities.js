@@ -74,6 +74,7 @@ async function attachActivitiesToRoutines(routines) {}
 
 // WE ARE HERE AND ITS BROKEN!!!!!!!!!!!!!!!!!!!!!!!!
 async function updateActivity({ id, ...fields }) {
+<<<<<<< HEAD
   // don't try to update the id
   // do update the name and description
   // return the updated activity
@@ -81,14 +82,26 @@ const setString = Object.keys(fields).map(
   (key, index) => `"${ key }"=$${ index + 1 }`
 ).join(', ');
 
+=======
+  const setString = Object.keys(fields).map(
+    (key,index) =>`"${key}"=$${index+1}`
+  ).join(', ');
+>>>>>>> 785e62d22b7e28320d7993fda448c53c9f8dfa82
 try {
   const { rows } = await client.query(`
   
     UPDATE activities
+<<<<<<< HEAD
     SET ${ setString }
     WHERE id=${ id }
     RETURNING *;
   `, Object.values(fields));
+=======
+    SET ${setString}
+    WHERE id = ${id}
+    RETURNING *;
+  `,Object.values(fields));
+>>>>>>> 785e62d22b7e28320d7993fda448c53c9f8dfa82
   return rows[0];
 } catch(err) {
   console.error(err)

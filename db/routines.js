@@ -11,7 +11,7 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
     ON CONFLICT (name) DO NOTHING
     RETURNING *; 
     `, [creatorId, isPublic, name, goal]);
-    return rows;
+    return rows[0];
   } catch (err) {
     console.error(err);
   }
@@ -20,21 +20,31 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
 async function getRoutineById(id) {}
 
 async function getRoutinesWithoutActivities() {
-try {
+  try {
 
-  const { rows } = await client.query(`
+    const { rows } = await client.query(`
   
-    SELECT * FROM routines;
+      SELECT * FROM routines;
   
-  `)
-  return rows
-} catch(err) {
-  console.error(err)
+    `)
+    return rows
+  } catch(err) {
+    console.error(err)
+  }
+
 }
 
+async function getAllRoutines() {
+  try {
+    const { rows } = await client.query(`
+      SELECT routines.*, users.username AS "creatorName" 
+      FROM routines, users;
+    `)
+    return rows;
+  } catch(err) {
+    console.error(err)
+  }
 }
-
-async function getAllRoutines() {}
 
 async function getAllPublicRoutines() {}
 
