@@ -1,12 +1,12 @@
 const client = require("./client");
-
+const { attachActivitiesToRoutines } = require("./activities")
 async function createRoutine({ creatorId, isPublic, name, goal }) {
 
   try {
 
     const{ rows } = await client.query(`
     
-    INSERT INTO routines("creatorId", "isPublic", name, goal)
+    INSERT INTO routines("creatorId", "isPublic", "name", "goal")
     VALUES($1, $2, $3, $4)
     ON CONFLICT (name) DO NOTHING
     RETURNING *; 
@@ -38,9 +38,13 @@ async function getAllRoutines() {
   try {
     const { rows } = await client.query(`
       SELECT routines.*, users.username AS "creatorName" 
-      FROM routines, users;
-    `)
-    return rows;
+      FROM routines
+      JOIN users
+      ON routines."creatorId"=users.id;
+    `);
+     //console.log("ATTACH HERE", await attachActivitiesToRoutines(rows))
+    const test = await attachActivitiesToRoutines(rows);
+    console.log("TEST HERE CHECK IT OUT", test.map(a => a.activities))
   } catch(err) {
     console.error(err)
   }
