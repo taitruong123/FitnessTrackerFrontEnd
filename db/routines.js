@@ -37,9 +37,12 @@ async function getRoutinesWithoutActivities() {
 async function getAllRoutines() {
   try {
     const { rows } = await client.query(`
-      SELECT routines.*, users.username AS "creatorName" 
-      FROM routines, users;
+      SELECT routines.*, users.username AS "creatorName"
+      FROM routines
+      INNER JOIN users
+      ON routines."creatorId"=users.id;
     `)
+    console.log("ROWS FOR THIS DUMB STUff", rows);
     return rows;
   } catch(err) {
     console.error(err)
