@@ -1,12 +1,12 @@
 const client = require("./client");
-
+const { attachActivitiesToRoutines } = require("./activities")
 async function createRoutine({ creatorId, isPublic, name, goal }) {
 
   try {
 
     const{ rows } = await client.query(`
     
-    INSERT INTO routines("creatorId", "isPublic", name, goal)
+    INSERT INTO routines("creatorId", "isPublic", "name", "goal")
     VALUES($1, $2, $3, $4)
     ON CONFLICT (name) DO NOTHING
     RETURNING *; 
@@ -37,6 +37,7 @@ async function getRoutinesWithoutActivities() {
 async function getAllRoutines() {
   try {
     const { rows } = await client.query(`
+<<<<<<< HEAD
       SELECT routines.*, users.username AS "creatorName"
       FROM routines
       INNER JOIN users
@@ -44,6 +45,16 @@ async function getAllRoutines() {
     `)
     console.log("ROWS FOR THIS DUMB STUff", rows);
     return rows;
+=======
+      SELECT routines.*, users.username AS "creatorName" 
+      FROM routines
+      JOIN users
+      ON routines."creatorId"=users.id;
+    `);
+     //console.log("ATTACH HERE", await attachActivitiesToRoutines(rows))
+    const test = await attachActivitiesToRoutines(rows);
+    console.log("TEST HERE CHECK IT OUT", test.map(a => a.activities))
+>>>>>>> 2a26beaf431d1c402f542c89451fa57db540ca64
   } catch(err) {
     console.error(err)
   }

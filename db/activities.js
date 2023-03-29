@@ -41,9 +41,9 @@ try {
   const { rows } = await client.query(`
   
     SELECT * FROM activities
-    WHERE id = ${id};
+    WHERE id = $1;
 
-  `);
+  `, [id]);
   return rows[0]
 } catch(err){
   console.error(err)
@@ -57,9 +57,9 @@ async function getActivityByName(name) {
     const { rows } = await client.query(`
     
       SELECT * FROM activities
-      WHERE name = '${name}';
+      WHERE name = $1;
   
-    `);
+    `,[name] );
     return rows[0]
   } catch(err){
     console.error(err)
@@ -68,11 +68,33 @@ async function getActivityByName(name) {
 }
 
 // used as a helper inside db/routines.js
-async function attachActivitiesToRoutines(routines) {}
+async function attachActivitiesToRoutines(routines) {
+const rountineIdArray = [...routines]
+    const binds = routines.map((id, index)=> {
+      return `$${index+1}`
+    }).join(', ');
+    const routineIds = routines.map((routine)=>{
+      return routine.id}
+    );
+     if (!routineIds?.length) return[];
+    try{ const { rows } = await client.query(`
+    SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId" 
+    FROM activities 
+    JOIN routine_activities
+    ON routine_activities."activityId"=activities.id
+    WHERE routine_activities."routineId" IN (${binds});
+    `, routineIds);
+    // console.log("SO MANY ROWS",rows)
+    for (const element of rountineIdArray){
+      const filterActivity = rows.filter(activity => {return activity.routineId === element.id})
+      element.activities = filterActivity
+    }
+  return rountineIdArray;
+  } catch(err){
+      console.error(err)}
 
+}
 
-
-// WE ARE HERE AND ITS BROKEN!!!!!!!!!!!!!!!!!!!!!!!!
 async function updateActivity({ id, ...fields }) {
   const setString = Object.keys(fields).map(
     (key,index) =>`"${key}"=$${index+1}`
