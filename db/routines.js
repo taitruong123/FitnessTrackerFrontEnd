@@ -5,11 +5,10 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
   try {
 
     const{ rows } = await client.query(`
-    
-    INSERT INTO routines("creatorId", "isPublic", "name", "goal")
-    VALUES($1, $2, $3, $4)
-    ON CONFLICT (name) DO NOTHING
-    RETURNING *; 
+      INSERT INTO routines("creatorId", "isPublic", "name", "goal")
+      VALUES($1, $2, $3, $4)
+      ON CONFLICT (name) DO NOTHING
+      RETURNING *; 
     `, [creatorId, isPublic, name, goal]);
     return rows[0];
   } catch (err) {
@@ -23,9 +22,7 @@ async function getRoutinesWithoutActivities() {
   try {
 
     const { rows } = await client.query(`
-  
       SELECT * FROM routines;
-  
     `)
     return rows
   } catch(err) {
@@ -37,34 +34,50 @@ async function getRoutinesWithoutActivities() {
 async function getAllRoutines() {
   try {
     const { rows } = await client.query(`
-<<<<<<< HEAD
-      SELECT routines.*, users.username AS "creatorName"
-      FROM routines
-      INNER JOIN users
-      ON routines."creatorId"=users.id;
-    `)
-    console.log("ROWS FOR THIS DUMB STUff", rows);
-    return rows;
-=======
       SELECT routines.*, users.username AS "creatorName" 
       FROM routines
       JOIN users
       ON routines."creatorId"=users.id;
     `);
      //console.log("ATTACH HERE", await attachActivitiesToRoutines(rows))
-    const test = await attachActivitiesToRoutines(rows);
-    console.log("TEST HERE CHECK IT OUT", test.map(a => a.activities))
->>>>>>> 2a26beaf431d1c402f542c89451fa57db540ca64
+    return await attachActivitiesToRoutines(rows);
+    //console.log("TEST HERE CHECK IT OUT", test.map(a => a.activities))
   } catch(err) {
     console.error(err)
   }
 }
 
-async function getAllPublicRoutines() {}
+async function getAllPublicRoutines() {
+  try{
+    const { rows } = await client.query(`
+      SELECT routines.*, users.username AS "creatorName" 
+      FROM routines
+      JOIN users
+      ON routines."creatorId"=users.id AND routines."isPublic"=true;
+    `);
+    return await attachActivitiesToRoutines(rows);
+  }catch(err){
+    console.error(err);
+  }
+}
 
-async function getAllRoutinesByUser({ username }) {}
+async function getAllRoutinesByUser({ username }) {
+  try{
+    const { rows } = await client.query(`
+    SELECT routines.*, users.username AS "creatorName" 
+    FROM routines
+    INNER JOIN users
+    ON routines."creatorId"=users.id AND (users.username="${username}");
+  `);
+  return await attachActivitiesToRoutines(rows);
+  }catch(err){
+    console.error(err);
+  }
+}
 
-async function getPublicRoutinesByUser({ username }) {}
+async function getPublicRoutinesByUser({ username }) {
+
+}
 
 async function getPublicRoutinesByActivity({ id }) {}
 

@@ -76,14 +76,14 @@ const rountineIdArray = [...routines]
     const routineIds = routines.map((routine)=>{
       return routine.id}
     );
-     if (!routineIds?.length) return[];
+    if (!routineIds?.length) return[];
     try{ const { rows } = await client.query(`
-    SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId" 
-    FROM activities 
-    JOIN routine_activities
-    ON routine_activities."activityId"=activities.id
-    WHERE routine_activities."routineId" IN (${binds});
-    `, routineIds);
+      SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId" 
+      FROM activities 
+      JOIN routine_activities
+      ON routine_activities."activityId"=activities.id
+      WHERE routine_activities."routineId" IN (${binds});
+      `, routineIds);
     // console.log("SO MANY ROWS",rows)
     for (const element of rountineIdArray){
       const filterActivity = rows.filter(activity => {return activity.routineId === element.id})
