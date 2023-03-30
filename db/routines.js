@@ -19,7 +19,16 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
 
 async function getRoutineById(id) {
 
-
+    try{ const { rows } = await client.query(`
+    
+    SELECT * FROM routines
+    WHERE id=${id};
+    
+    `); 
+    return rows[0];
+    } catch(err){
+      console.error(err)
+    } 
 
 }
 
@@ -76,7 +85,7 @@ async function getAllRoutinesByUser({ username }) {
     ON routines."creatorId"=users.id 
     WHERE "creatorId"=$1;
   `, [user.id]);
-  console.log('USER ID IS UNDEFINED WITH A STEEL CHAIR', user.id);
+  //console.log('USER ID IS UNDEFINED WITH A STEEL CHAIR', user.id);
   return await attachActivitiesToRoutines(rows);
   }catch(err){
     console.error(err);
@@ -132,7 +141,27 @@ try {
 return rows[0]
 } catch(err){console.error(err)}
 }
-async function destroyRoutine(id) {}
+async function destroyRoutine(id) {
+
+    try{ 
+
+      await client.query(`
+    
+      DELETE FROM routine_activities
+      WHERE "routineId"=${id};
+  
+      `);
+
+      await client.query(`
+    
+      DELETE FROM routines
+      WHERE id=${id};
+
+      `);
+ 
+  } catch(err){
+      console.error(err)}
+}
 
 module.exports = {
   getRoutineById,
