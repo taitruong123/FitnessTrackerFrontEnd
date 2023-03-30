@@ -4,7 +4,7 @@ async function addActivityToRoutine({
   routineId,
   activityId,
   count,
-  duration,
+  duration
 }) {
     try {
   const { rows } = await client.query(`
