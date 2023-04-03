@@ -1,6 +1,18 @@
 const client = require("./client");
 
 // database functions
+const getAllUsernames = async () => {
+  try {
+    const { rows } = await client.query(`
+    
+    SELECT username FROM users;
+
+    `)
+    return rows;
+  } catch(err){
+    console.error(err)
+  }
+}
 
 // user functions
 async function createUser({ username, password }) {
@@ -68,4 +80,5 @@ module.exports = {
   getUser,
   getUserById,
   getUserByUsername,
+  getAllUsernames
 }

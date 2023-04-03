@@ -2,18 +2,42 @@
 const express = require("express");
 const router = express.Router();
 const { createUser } = require("../db")
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const { getAllUsernames } = require('../db/users');
+
+
 // POST /api/users/register
+dotenv.config()
+const generateToken = (username) => {
+    return jwt.sign(username, process.env.JWT_SECRET);
+}
 
-router.post('/register', async ( req, res) => {
-       // const { username, password } = req.body;
 
+router.post('/register', async ( req, res, next) => {
     try{
+        const usernames = await getAllUsernames();
+        usernames.map((user, index) => {
+            if(user.username === req.body.username){
+                throw new Error('User Already Exist');
+            }
+        })
+
+        console.log('USERNAME HERE!', usernames);
         const response = await createUser(req.body)
-        console.log('RESPONSE HERE!!!!', response)
-    } catch(err){console.error(err)}
+        const jsonToken = generateToken(response.username);
+        const loginMessage = "Congratulate You Login";
+        // console.log('TOKEN HERE!!!!', token);
+        res.send({  
+            message: loginMessage,
+            token: jsonToken,
+            user: response
+    })
+    } catch(err) {
+        throw err;
+    }
 }
 )
-
 
 // POST /api/users/login
 

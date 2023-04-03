@@ -97,7 +97,7 @@ describe("/api/users", () => {
       );
     });
 
-    xit("Throws errors for duplicate username", async () => {
+    it("Throws errors for duplicate username", async () => {
       // Create a fake user in the DB
       const { fakeUser: firstUser } = await createFakeUserWithToken();
       // Now try to create a user with the same username
