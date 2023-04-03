@@ -67,34 +67,6 @@ async function getActivityByName(name) {
 
 }
 
-// used as a helper inside db/routines.js
-// async function attachActivitiesToRoutines(routines) {
-// const rountineIdArray = [...routines]
-//     const binds = routines.map((id, index)=> {
-//       return `$${index+1}`
-//     }).join(', ');
-//     const routineIds = routines.map((routine)=>{
-//       return routine.id}
-//     );
-//     if (!routineIds?.length) return[];
-//     try{ const { rows } = await client.query(`
-//       SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId" 
-//       FROM activities 
-//       JOIN routine_activities
-//       ON routine_activities."activityId"=activities.id
-//       WHERE routine_activities."routineId" IN (${binds});
-//       `, routineIds);
-//     // console.log("SO MANY ROWS",rows)
-//     for (const element of rountineIdArray){
-//       const filterActivity = rows.filter(activity => {return activity.routineId === element.id})
-//       element.activities = filterActivity
-//     }
-//   return rountineIdArray;
-//   } catch(err){
-//       console.error(err)}
-
-// }
-
 async function attachActivitiesToRoutines(routines) {
   // no side effects
   const routinesToReturn = [...routines];
