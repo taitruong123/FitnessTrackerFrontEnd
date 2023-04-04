@@ -5,7 +5,8 @@ const { createUser } = require("../db")
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const { getAllUsernames, getUserByUsername } = require('../db/users');
-const { getPublicRoutinesByUser, getAllRoutinesByUser } = require('../db/routines')
+const { getPublicRoutinesByUser, getAllRoutinesByUser } = require('../db/routines');
+const { token } = require("morgan");
 
 
 // POST /api/users/register
@@ -20,9 +21,10 @@ router.post('/register', async ( req, res, next) => {
         const usernames = await getAllUsernames();
         usernames.map((user, index) => {
             if(user.username === req.body.username){
-                next({
+                res.status(401).send({
+                    error: "BROKEN",
                     name: "UserAlreadyExists",
-                    message: "sorry, that username already exists"
+                    message: `User ${username} is already taken`
                 });
             }
         })
@@ -89,16 +91,16 @@ router.get('/:username/routines', async (req, res, next)=>{
     const username = req.params.username
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
 
     try{
         const user = getUserByUsername(username);
         const publicRoutines = await getPublicRoutinesByUser({username: username});
         const allRoutines = await getAllRoutinesByUser({username: username});
-        console.log(publicRoutines);
-        if(token){
+        if(decodedToken.username === username){
             res.send(allRoutines)
         }else{
-            res.send(publicRoutines)
+            res.send(publicRoutines);
         }
 
     }catch(err){
