@@ -5,7 +5,7 @@ const getAllUsernames = async () => {
   try {
     const { rows } = await client.query(`
     
-    SELECT username FROM users;
+      SELECT username FROM users;
 
     `)
     return rows;

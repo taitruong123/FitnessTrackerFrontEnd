@@ -101,6 +101,7 @@ async function getPublicRoutinesByUser({ username }) {
     JOIN users
     ON routines."creatorId"=users.id 
     WHERE "creatorId"=$1 AND routines."isPublic"=true;
+    
   `, [user.id]);
   return attachActivitiesToRoutines(rows);
     } catch(err){
