@@ -1,6 +1,7 @@
 const client = require("./client");
 const { getUserById } = require("./users")
 const { getRoutineById } = require("./routines")
+
 async function addActivityToRoutine({
   routineId,
   activityId,
@@ -17,7 +18,7 @@ async function addActivityToRoutine({
   `,[routineId, activityId, count, duration]);
   return rows[0];
 } catch(err){
-    console.error(err)
+    throw err
   }
 }
 
@@ -25,8 +26,8 @@ async function getRoutineActivityById(id) {
 
   try{const { rows } = await client.query(`
   
-  SELECT * FROM routine_activities
-  WHERE id=${id}; 
+    SELECT * FROM routine_activities
+    WHERE id=${id}; 
   
   `);
 return rows[0]
@@ -63,10 +64,10 @@ async function updateRoutineActivity({ id, ...fields }) {
 try {
   const { rows } = await client.query(`
 
-  UPDATE routine_activities
-  SET ${setString}
-  WHERE id=${id}
-  RETURNING *;
+    UPDATE routine_activities
+    SET ${setString}
+    WHERE id=${id}
+    RETURNING *;
 
   `, Object.values(fields))
 return rows[0]
@@ -79,14 +80,14 @@ async function destroyRoutineActivity(id) {
   try{ 
 
     const { rows } = await client.query(`
-  
-    DELETE FROM routine_activities
-    WHERE id=${id}
-    RETURNING *;
+      DELETE FROM routine_activities
+      WHERE id=${id}
+      RETURNING *;
     `);
 return rows[0]
 } catch(err){
-    console.error(err)}
+    console.error(err)
+  }
 
 }
 

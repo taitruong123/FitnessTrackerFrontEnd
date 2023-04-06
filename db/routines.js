@@ -1,6 +1,7 @@
 const client = require("./client");
 const { attachActivitiesToRoutines } = require("./activities")
 const { getUserByUsername } = require("./users")
+
 async function createRoutine({ creatorId, isPublic, name, goal }) {
 
   try {
@@ -29,7 +30,6 @@ async function getRoutineById(id) {
     } catch(err){
       console.error(err)
     } 
-
 }
 
 async function getRoutinesWithoutActivities() {
@@ -126,7 +126,6 @@ async function getPublicRoutinesByActivity({ id }) {
 
 
 async function updateRoutine({ id, ...fields }) {
-
   const setString = Object.keys(fields).map(
     (key,index) =>`"${key}"=$${index+1}`
   ).join(', ');
@@ -142,6 +141,7 @@ try {
 return rows[0]
 } catch(err){console.error(err)}
 }
+
 async function destroyRoutine(id) {
 
     try{ 
@@ -153,13 +153,14 @@ async function destroyRoutine(id) {
   
       `);
 
-      await client.query(`
+      const {rows} = await client.query(`
     
       DELETE FROM routines
-      WHERE id=${id};
+      WHERE id=${id}
+      RETURNING *;
 
       `);
- 
+      return rows[0];
   } catch(err){
       console.error(err)}
 }
