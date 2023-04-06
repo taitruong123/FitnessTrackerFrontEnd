@@ -15,7 +15,7 @@ async function createActivity({ name, description }) {
     return rows[0];
   }
   catch (err){
-    console.error(err)
+    throw err;
   }
 }
 

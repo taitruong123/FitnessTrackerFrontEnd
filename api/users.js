@@ -24,7 +24,7 @@ router.post('/register', async ( req, res, next) => {
                 res.status(401).send({
                     error: "BROKEN",
                     name: "UserAlreadyExists",
-                    message: `User ${username} is already taken`
+                    message: `User ${req.body.username} is already taken`
                 });
             }
         })
