@@ -30,7 +30,7 @@ router.post('/register', async ( req, res, next) => {
         })
         const response = await createUser(req.body)
         const jsonToken = generateToken(response.username);
-        const loginMessage = "Congratulate You Login";
+        const loginMessage = "YOU IN";
         // console.log('TOKEN HERE!!!!', token);
         res.send({  
             message: loginMessage,
@@ -61,7 +61,7 @@ router.post('/login', async (req, res, next) => {
         if(user && user.password === password){
             res.send({
                 user: user,
-                message: "you're logged in!",
+                message: "You're Logged In!",
                 token: token
             });
         }
