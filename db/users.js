@@ -27,7 +27,7 @@ async function createUser({ username, password }) {
   delete rows[0].password;
   return rows[0];
   } catch(err){
-    console.error(err)
+    throw err
   }
 }
 //we are here

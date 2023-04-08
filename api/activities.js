@@ -1,17 +1,22 @@
 const express = require('express');
-const { getAllActivities, createActivity, updateActivity, getPublicRoutinesByActivity } = require('../db');
+const { getAllActivities, createActivity, updateActivity, getPublicRoutinesByActivity} = require('../db');
 const router = express.Router();
 
 // GET /api/activities/:activityId/routines
 router.get('/:activityId/routines', async(req, res, next) => {
-    const id = req.params.activityId;
+    const id = parseInt(req.params.activityId);
+    let exists = false;
     try{
-        const result = await getPublicRoutinesByActivity({id: id});
-        console.log("RESULT HERE: ", result);
-        if(result != null){
+        const activities = await getAllActivities();
+        for(let i = 0; i < activities.length; i++){
+            if(activities[i].id === id){
+                exists = true;
+            }
+        }
+        if(exists === true){
+            const result = await getPublicRoutinesByActivity({id: id});
             res.send(result);
         }else{
-            console.log("RESULT HERE INSIDE: ", result);
             res.status(401).send({
                 error: "BROKEN",
                 name: "ActivityDoesNotExist",
@@ -36,23 +41,19 @@ router.get('/', async (req, res, next) => {
 // POST /api/activities
 router.post('/', async (req, res, next) => {
     try{
-        let nameCheck = true;
         const activities = await getAllActivities();
-        nameCheck = activities.map((activity, index)=>{
+        activities.map((activity, index)=>{
             if(activity.name === req.body.name){
-                return false;
+                res.status(401).send({
+                    error: "BROKEN",
+                    name: "NameAlreadyExists",
+                    message: `An activity with name ${req.body.name} already exists`
+                });
             }
-        })
-        if(nameCheck === false){
-            res.status(401).send({
-                error: "BROKEN",
-                name: "NameAlreadyExists",
-                message: `This activity name already exists`
-            });
-        }else{
-            const result = await createActivity(req.body);
-            res.send(result);
-        }
+        })          
+        const result = await createActivity(req.body);
+        res.send(result);
+        
     }catch(err){
         next(err)
     }
@@ -64,6 +65,16 @@ router.patch('/:activityId', async (req, res, next) => {
     const data = req.body;
     data.id = id;
     try{
+        const activities = await getAllActivities();
+        activities.map((activity, index)=>{
+            if(activity.name === req.body.name){
+                res.status(401).send({
+                    error: "BROKEN",
+                    name: "NameAlreadyExists",
+                    message: `An activity with name ${req.body.name} already exists`
+                });
+            }
+        })  
         const activity = await updateActivity(data);
         if(!activity){
             res.status(401).send({

@@ -31,6 +31,9 @@ router.use(async (req, res, next) => {
 
 // GET /api/health
 router.get('/health', async (req, res, next) => {
+    res.send({
+        message: "The route is healthy"
+    })
 });
 
 // ROUTER: /api/users
@@ -57,4 +60,12 @@ router.use((error, req, res, next) => {
         message: error.message
     });
 });
+
+router.get('*', (req,res,next) => {
+    res.status(404).send({
+        error: "BROKEN",
+        name: "RouteDoesNotExistError",
+        message: "Sorry, the page you're looking for isn't here"
+    })
+})
 module.exports = router;

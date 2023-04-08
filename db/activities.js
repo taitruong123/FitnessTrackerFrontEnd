@@ -111,7 +111,7 @@ try {
   `, Object.values(fields));
   return rows[0];
 } catch(err) {
-  console.error(err)
+  throw err;
 }
 
 }
