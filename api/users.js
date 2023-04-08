@@ -17,39 +17,28 @@ const generateToken = (username) => {
 
 
 router.post('/register', async ( req, res, next) => {
-    const {password} = req.body;
     try{
-        if(typeof password === "string" && password.length < 8){
-            res.send({
-                error: "BROKEN",
-                name: "PasswordTooShortError",
-                message: `Password Too Short!`
-            })
-        }
         const usernames = await getAllUsernames();
         usernames.map((user, index) => {
             if(user.username === req.body.username){
                 res.status(401).send({
                     error: "BROKEN",
                     name: "UserAlreadyExists",
-                    message: `User ${req.body.username} is already taken.`
+                    message: `User ${req.body.username} is already taken`
                 });
             }
         })
         const response = await createUser(req.body)
         const jsonToken = generateToken(response.username);
-<<<<<<< HEAD
-        const loginMessage = "YOU IN";
+        const loginMessage = "Congratulate You Login";
         // console.log('TOKEN HERE!!!!', token);
-=======
-        const loginMessage = "Congratulations you logged in!";
->>>>>>> 12fe90d182dbf45315c8d3da3f7c0a4edca97d9a
         res.send({  
             message: loginMessage,
             token: jsonToken,
             user: response
     })
     } catch(err) {
+        console.log("error: " , err)
         next(err);
     }
 }
@@ -72,7 +61,7 @@ router.post('/login', async (req, res, next) => {
         if(user && user.password === password){
             res.send({
                 user: user,
-                message: "You're Logged In!",
+                message: "you're logged in!",
                 token: token
             });
         }
