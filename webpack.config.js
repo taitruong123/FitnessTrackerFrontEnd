@@ -1,3 +1,5 @@
+"use strict"
+const webpack = require("webpack")
 module.exports = {
     module: {
         rules:[
@@ -10,5 +12,15 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    resolve: {
+        alias: { 
+            "pg-native":"./dummy.js"
+
+        }
+    },
+    plugins:[
+        new webpack.IgnorePlugin({resourceRegExp: /^pg-native$/})
+    ],
+    target: "node"
 }
