@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import Header from './header.js'
+import Header from './component/header.js'
 const App = () => {
     //state goes here
 
@@ -14,12 +14,12 @@ const App = () => {
 return (
     <div>
       <Header 
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn} 
-        setToken={setToken} 
-        setUsernameInput={setUsernameInput} 
-        setPasswordInput={setPasswordInput} 
-        setDisplayLogInButton={setDisplayLogInButton}
+        // isLoggedIn={isLoggedIn}
+        // setIsLoggedIn={setIsLoggedIn} 
+        // setToken={setToken} 
+        // setUsernameInput={setUsernameInput} 
+        // setPasswordInput={setPasswordInput} 
+        // setDisplayLogInButton={setDisplayLogInButton}
         /> 
     </div>)
 }
