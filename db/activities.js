@@ -5,16 +5,15 @@ async function createActivity({ name, description }) {
   // return the new activity
   try {
     const { rows } = await client.query(`
-
-    INSERT INTO activities(name, description)
-    VALUES($1, $2)
+    
+    INSERT INTO activites(name, description)
+    VALUE($1, $2)
     ON CONFLICT (name) DO NOTHING
     RETURNING *;
-    
-    `,[name, description]) 
+
+    `, [name, description])
     return rows[0];
-  }
-  catch (err){
+  } catch (err){
     throw err;
   }
 }
