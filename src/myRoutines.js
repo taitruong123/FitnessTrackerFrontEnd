@@ -51,6 +51,22 @@ const MyRoutines = (props) => {
           console.error(err);
         }
       }
+      
+      const deleteRoutine = async (routineId) => {
+        console.log('fired')
+        try{
+            const deletedRoutine = await fetch(`api/routines/${routineId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${props.token}`
+                },
+            })
+            console.log(deletedRoutine, 'should work now')
+        }catch(error){
+            console.log(error)
+        }
+      }
 
     useEffect(() => {
         getUserData()
@@ -66,6 +82,7 @@ const MyRoutines = (props) => {
                         <ol>
                             <li>{routine.goal}</li>
                         </ol>
+                     <button id="delete" onClick={() => deleteRoutine(routine.id)}>Delete This Routine</button>
                     </div>
                 )})
             }
