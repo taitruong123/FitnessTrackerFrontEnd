@@ -14,15 +14,21 @@ const Header = (props) => {
     return (
         <header>
             <h2>Welcome to Jumpin' Jack's fitness app!</h2>
-            <span> <Link to='/'> Home Page </Link></span>
             {
                 props.isLoggedIn ? 
-                
-                <span><Link to='/login' onClick={logOut}>Log Out</Link></span>:
-                <span><Link to='/login'>Log In or Register</Link></span>
+                <div>
+                    <span> <Link to='/'> Home Page </Link></span>
+                        <span> <Link to='/activities'> Activities </Link></span>
+                        <span><Link to='/login' onClick={logOut}>Log Out</Link></span>
+                        <span><Link to='/myroutines'> My Routines </Link></span>
+                    </div>
+                :
+                    <div>
+                        <span> <Link to='/'> Home Page </Link></span>
+                        <span> <Link to='/activities'> Activities </Link></span>
+                        <span><Link to='/login'>Log In or Register</Link></span>
+                    </div>
             }
-            
-            
         </header>
     )
 }

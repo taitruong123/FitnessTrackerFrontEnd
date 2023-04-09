@@ -11,44 +11,47 @@ const { token } = require("morgan");
 
 // POST /api/users/register
 dotenv.config()
-const generateToken = (username) => {
-    return jwt.sign(username, process.env.JWT_SECRET);
-}
+// const generateToken = (username) => {
+//     return jwt.sign(username, process.env.JWT_SECRET);
+// }
 
 
 router.post('/register', async ( req, res, next) => {
-    const {password} = req.body;
-    try{
-        if(typeof password === "string" && password.length < 8){
-            res.send({
-                error: "BROKEN",
-                name: "PasswordTooShortError",
-                message: `Password Too Short!`
-            })
-        }
-        const usernames = await getAllUsernames();
-        usernames.map((user, index) => {
-            if(user.username === req.body.username){
-                res.status(401).send({
+    const {username, password} = req.body.user;
+        try{
+            const existingUsername = await getUserByUsername(username);
+            console.log(existingUsername, 'existing user')
+            if(existingUsername){
+                res.send({
                     error: "BROKEN",
                     name: "UserAlreadyExists",
-                    message: `User ${req.body.username} is already taken.`
+                    message: `User ${username} is already taken.`
                 });
-            }
-        })
-        const response = await createUser(req.body)
-        const jsonToken = generateToken(response.username);
-        const loginMessage = "Congratulations you logged in!";
-        res.send({  
-            message: loginMessage,
-            token: jsonToken,
-            user: response
+            } else if(password.length < 8){
+                res.send({
+                    error: "BROKEN",
+                    name: "PasswordTooShortError",
+                    message: `Password Too Short!`
+                })
+            }else{
+                const newUser = await createUser({username, password})
+                console.log('newuser', newUser)
+                const jsonToken = jwt.sign({
+                    id: newUser.id,
+                    username
+                },
+                process.env.JWT_SECRET
+                );
+                res.send({  
+                    message: "Congratulations you logged in!",
+                    token: jsonToken,
+                    user: newUser
     })
+}
     } catch(err) {
         next(err);
     }
-}
-)
+})
 
 // POST /api/users/login
 router.post('/login', async (req, res, next) => {
@@ -95,18 +98,15 @@ router.get('/me', async (req, res, next)=>{
 // GET /api/users/:username/routines
 router.get('/:username/routines', async (req, res, next)=>{
     const username = req.params.username
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
 
     try{
-        const user = getUserByUsername(username);
-        const publicRoutines = await getPublicRoutinesByUser({username: username});
-        const allRoutines = await getAllRoutinesByUser({username: username});
-        if(decodedToken.username === username){
+        const user = await getUserByUsername(username)
+        if(req.user && req.user.username === user.username){
+            const allRoutines = await getAllRoutinesByUser(req.user)
             res.send(allRoutines)
-        }else{
-            res.send(publicRoutines);
+        } else {
+            const getAllPublicRoutines = await getPublicRoutinesByUser(user)
+            res.send(getAllPublicRoutines)
         }
 
     }catch(err){

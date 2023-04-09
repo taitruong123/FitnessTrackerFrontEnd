@@ -1,14 +1,12 @@
 import React, { useState } from 'react' 
 
-
-
 const Activities = (props) => {
+    console.log(props, 'props from activities')
     let [userInfo, setUserInfo] = useState({
         name: "",
         description: ""
     })
 
-    //console.log(activities)
     const handleChange = (event) => {
         event.preventDefault();
         let value = event.target.value;
@@ -59,7 +57,7 @@ const Activities = (props) => {
             props.activities.map((activity, index)=>{
                 return(
                     
-                    <div id="activityList">
+                    <div id="activityList" key={index}>
                         
                                 <ul>
                                     <li>
@@ -73,33 +71,22 @@ const Activities = (props) => {
                 
             })
         } 
-        { props.isLoggedin === true ?
+        { props.isLoggedin === false ?
             <form id="postActivity">
-
-            <label >
-                Name: 
+            <label >Name:  </label>
                 <input 
                 type="text" 
                 placeholder="name" 
                 name="name"
                 onChange={handleChange}>
                 </input>
-            </label>
-
-            <label 
-            
-            >
-            
-            Description:
+            <label>Description: </label>
                 <input 
                 type="text" 
                 placeholder="description" 
                 name="description"
                 onChange={handleChange}>
                 </input>
-
-            </label>
-
             <button 
             className="postActivityButton" 
             onClick={createNewActivity}
@@ -107,7 +94,7 @@ const Activities = (props) => {
             Post a New Activity!
             </button>
             </form> 
-            : null
+            : 'hey hey hey'
         }
         </div>
 

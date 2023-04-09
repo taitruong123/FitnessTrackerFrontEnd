@@ -6,6 +6,7 @@ import Routines from './routines';
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import LogIn from './logIn';
 import Activities from './activties';
+import MyRoutines from './myRoutines';
 
 const App = () => {
 const [ isLoggedIn, setIsLoggedIn ] = useState(false)
@@ -18,6 +19,8 @@ const [ activities, setActivities ] = useState([])
 const [ username, setUsername ] = useState('')
 const [ displayLogInButton, setDisplayLogInButton ] = useState(true)
 const [ id, setId ] = useState(0)
+
+
 useEffect(()=>{
     const displayAllPublicRoutines = async () => {
         try {
@@ -72,19 +75,6 @@ useEffect(()=>{
                     token={token}
                     id={id}
 
-                />  
-                <Activities
-                    // count={count}
-                    // setCount={setCount}
-                    // duration={duration}
-                    // setDuration={setDuration}
-                    // id={id}
-                    // setId={setId}
-                    // username={username}
-                    activities={activities}
-                    isLoggedIn={isLoggedIn}
-                    //setActivities={setActivities}
-
                 />
                 </div>    
             }
@@ -106,7 +96,18 @@ useEffect(()=>{
                 />
 
              }/>
-                
+            <Route path='/activities' element = {
+                <Activities
+                    activities={activities}
+                    isLoggedIn={isLoggedIn}
+                />
+            }/>
+            <Route path='/myroutines' element = {
+                <MyRoutines
+                username={username}
+                token={token}
+                />
+            }/>
             </Routes>
             
         </>

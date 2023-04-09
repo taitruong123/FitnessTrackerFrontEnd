@@ -1,34 +1,12 @@
 import React, { useState } from 'react' 
 import {Link, useNavigate}  from "react-router-dom"
 
-
-
-
-
 const LogIn = (props) => {
     const navigate = useNavigate();
-    let [userInfo, setUserInfo] = useState({
-        username: "",
-        password: ""
-    })
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
-    const handleChange = (event) => {
-        event.preventDefault();
-        let value = event.target.value;
-        let name = event.target.name;
-        console.log("VALUE HERE", value)
-
-        setUserInfo((prevalue) => {
-            return {
-                ...prevalue,
-                [name]: value
-            }
-        })
-    }
-
-    const logUserIn = async (event) => {
-        event.preventDefault();
-        props.setUsername(userInfo.username);
+    const logUserIn = async () => {
         try{
             const response = await fetch('api/users/login',{
                 method: 'POST',
@@ -36,18 +14,17 @@ const LogIn = (props) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: userInfo.username,
-                    password: userInfo.password
+                    username: username,
+                    password: password
                 }),
             });
             const result = await response.json();
+            console.log(result, 'result from frontend')
             if(result.error){
                 throw result.error;
             } else 
-            {console.log('login result: ', result);
-            console.log("user ID", result.user.id)
+            {
             props.setId(result.user.id)
-            console.log("ID FOUND HERE", props.id)
             props.setToken(result.token)
             props.setIsLoggedIn(true)
             navigate("/")};
@@ -57,10 +34,8 @@ const LogIn = (props) => {
         }
     }
 
-    const registerUser = async (event) =>{
-        event.preventDefault();
+    const registerUser = async () =>{
         try{
-            console.log("USER INFO HERE", userInfo.user)
             const response = await fetch('api/users/register', {
                 method: "POST",
                 headers: {
@@ -68,14 +43,12 @@ const LogIn = (props) => {
                 }, 
                 body: JSON.stringify({
                     user: {
-                        username: userInfo.username,
-                        password: userInfo.password
+                        username: username,
+                        password: password
                     }
                 })
             });
-            const result = await response.json();
-            console.log(result)
-            return result
+            console.log(response)
         }catch(err){
             console.error(err);
         }
@@ -89,8 +62,8 @@ const LogIn = (props) => {
                     Username:
                     <input type="text"
                         placeholder="Username"
-                        onChange={handleChange}
-                        name="username"
+                        onChange={(event) => setUsername(event.target.value)}
+                        id="username"
                         >
                     </input>
                 </label>
@@ -100,9 +73,8 @@ const LogIn = (props) => {
                     <input 
                     type="text"
                     placeholder="password"
-                    onChange={handleChange}
-                    name="password">
-
+                    onChange={(event) => setPassword(event.target.value)}
+                    id="password">
                     </input>
                 </label> 
                 <button className="logInbutton"

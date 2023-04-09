@@ -94,6 +94,7 @@ async function getAllRoutinesByUser({ username }) {
 
 async function getPublicRoutinesByUser({ username }) {
     const user = await getUserByUsername(username)
+    console.log(user, 'user in db')
     try { const { rows } = await client.query(`
     
     SELECT routines.*, users.username AS "creatorName" 
