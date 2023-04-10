@@ -10,7 +10,7 @@ const App = () => {
 
     useEffect(()=>{
         const getRoutines = async() => {
-            const response = await fetch(`/api/routines`)
+            const response = await axios.get(`/api/routines`)
             const data = await response.json()
             setRoutines(data.data.routines);
         }
@@ -24,9 +24,8 @@ return (
             <Header IsLoggedIn={IsLoggedIn} setIsLoggedIn={setIsLoggedIn} userToken={userToken} setUserToken={setUserToken}  />
             <Routes>
                 <Route path='/' element={<Home />}></Route>
-                <Route path='/login' element={<Login setIsLoggedIn={setIsLoggedIn} IsLoggedIn={IsLoggedIn} setUserToken={setUserToken} />}></Route>
+                <Route path='/login' element={<Login />}></Route>
                 <Route path='/profile' element={<Profile />}></Route>
-                <Route path='/register' element={<Register setUserToken={setUserToken} setIsLoggedIn={setIsLoggedIn} IsLoggedIn={IsLoggedIn}/>}></Route>
             </Routes>
     </div>)
 }
