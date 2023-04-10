@@ -4,6 +4,7 @@
   "description": "an API for our new fitness empire, FitnessTrac.kr, using node, express, postgresql, and jQuery",
   "main": "server.js",
   "scripts": {
+    "build:dev": "webpack -w --mode=development",
     "seed:dev": "nodemon ./db/seed.js",
     "seed": "node ./db/seed.js",
     "start:dev": "nodemon server.js",
@@ -35,15 +36,26 @@
     "eslint-plugin-jest": "^25.2.4",
     "nodemon": "^2.0.4",
     "supertest": "^6.1.6",
+<<<<<<< HEAD
     "webpack-cli": "^5.0.1"
+=======
+    "axios": "^0.19.2"
+>>>>>>> 3fd06be171bdc574686258adc558d2ceb3d95bdc
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
     "axios": "^0.19.2",
+<<<<<<< HEAD
     "babel": "^6.23.0",
     "babel-loader": "^9.1.2",
     "bcrypt": "^4.0.1",
     "chalk": "^4.1.2",
+=======
+    "babel-loader": "^9.1.2",
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.20.2",
+    "chalk": "^4.0.0",
+>>>>>>> 3fd06be171bdc574686258adc558d2ceb3d95bdc
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "express": "^4.18.2",
@@ -51,6 +63,7 @@
     "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+<<<<<<< HEAD
     "pg": "^8.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -60,5 +73,13 @@
   },
   "directories": {
     "test": "tests"
+=======
+    "pg": "^8.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0",
+    "webpack": "^5.78.0",
+    "webpack-cli": "^5.0.1"
+>>>>>>> 3fd06be171bdc574686258adc558d2ceb3d95bdc
   }
 }
